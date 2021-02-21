@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - playground
+
+  hasura:
+    image: hasura/graphql-engine:v1.3.2.cli-migrations-v2
+    ports:
+    - "8080:8080"
+    depends_on:
+    - "postgres"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: "111"
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public"
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+    networks:
+      - playground
+
+  frontend:
+    image: node:11
+    ports:
+      - 3000:3000
+    environment:
+      - APP_HOST=localhost
+      - APP_PORT=3000
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - NEXT_PUBLIC_GRAPHQL_API_URL=http://localhost:8080/v1/graphql
+      - NEXT_PUBLIC_AUTH0_CLIENT_ID=1F6Ccxac291Dsidnf8Y5G4nM59UfKHqT
+      - NEXT_PUBLIC_AUTH0_DOMAIN=project.auth0.com
+      - NEXT_PUBLIC_AUTH0_CALLBACK_URL=https://project.com/callback
+      - NEXT_PUBLIC_JWT_SECRET=secret
+      - NEXT_PUBLIC_BACKEND_URL=http://api.project.local:8000
+      - NEXT_PUBLIC_HASURA_GRAPHQL_UNAUTHORIZED_ROLE=public
+    volumes:
+      - ./frontend:/usr/local/app
+    working_dir: /usr/local/app
+    entrypoint: "/bin/bash"
+    command: "-c \"if [ ! -d \"node_modules\" ]; then npm i; fi; npm run dev\""
+    networks:
+      - playground
+
+networks:
+  playground:
+    driver: bridge
+
+volumes:
+  db_data:

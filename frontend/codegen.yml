@@ -1,0 +1,30 @@
+overwrite: true
+schema: ./schema.json
+documents:
+  - "src/**/*.{ts,tsx}"
+  - "!src/**/*.generated.{ts,tsx}"
+generates:
+  generated/index.tsx:
+    plugins:
+      - add:
+          placement: 'prepend'
+          content: '/* eslint-disable */'
+      - typescript
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .generated.tsx
+      baseTypesPath: ../generated/index.tsx
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+    plugins:
+      - add:
+          placement: 'prepend'
+          content: '/* eslint-disable */'
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  ./schema.json:
+    plugins:
+      - "introspection"

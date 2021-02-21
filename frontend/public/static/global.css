@@ -1,0 +1,57 @@
+/* Tailwind styles. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Base styles. */
+body {
+  /* The "-webkit-tap-highlight-color" property is used only here. */
+  /* stylelint-disable-next-line property-whitelist */
+  -webkit-tap-highlight-color: transparent;
+  @apply min-h-screen;
+  @apply font-main;
+  @apply text-black;
+  @apply antialiased;
+  @apply bg-white;
+}
+/* Normalize styles. */
+img {
+  /* The "image-orientation" property is used only here. */
+  /* stylelint-disable-next-line property-whitelist */
+  image-orientation: from-image;
+}
+:matches(*, button) {
+  &:focus {
+    outline: none;
+    &:focus-visible {
+      outline: 1px dotted;
+      outline: 5px auto -webkit-focus-ring-color;
+    }
+  }
+}
+/* Clears the 'X' button (Chrome) */
+input[type="search"] {
+  /* stylelint-disable-next-line selector-pseudo-element-whitelist */
+  &:matches(::-webkit-search-decoration, ::-webkit-search-cancel-button, ::-webkit-search-results-button, ::-webkit-search-results-decoration) {
+    @apply hidden;
+  }
+}
+input[type="time" i] {
+  /* stylelint-disable-next-line selector-pseudo-element-whitelist */
+  &::-webkit-calendar-picker-indicator {
+    @apply hidden;
+  }
+  /* stylelint-disable-next-line selector-pseudo-element-whitelist */
+  &:matches(::-webkit-inner-spin-button, ::-webkit-clear-button) {
+    @apply appearance-none;
+  }
+}
+@responsive {
+  .scrollbar-hidden {
+    /* The "scrollbar-width" property is used only here. */
+    /* stylelint-disable-next-line property-whitelist */
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+  }
+}

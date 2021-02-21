@@ -1,0 +1,33 @@
+- table:
+    schema: public
+    name: product
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - description
+      - name
+      - price
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - createdAt
+      - updatedAt
+      - name
+      - description
+      - price
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - description
+      - name
+      - price
+      filter: {}
+      check: {}
